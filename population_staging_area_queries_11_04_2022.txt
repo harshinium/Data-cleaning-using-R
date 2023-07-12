@@ -1,0 +1,18 @@
+"used file with double quotes"
+
+CREATE EXTERNAL TABLE IF NOT EXISTS population_1620.population_2020     ###change the table and database name accordingly###
+(Area_codes STRING,LSOA_name STRING,All_ages INT,Zero_fifteen INT,Sixteen_twentynine INT,Thirty_fortyfour INT,Fortyfive_sixtyfour INT,
+Sixtyfive_plus INT,LAD16CD STRING,LAD16NM STRING,Region STRING)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' 
+with SERDEPROPERTIES ( "separatorChar"=",","quoteChar" = "\"","skip.header.line.count"="1")
+stored as textfile;
+
+2016 year file:  LOAD DATA INPATH '/user/maria_dev/crime_population_2016_2020/population_2016_2020/regionwise_population_2016.csv' OVERWRITE INTO TABLE population_1620.population_2016;
+
+2017 year file   LOAD DATA INPATH '/user/maria_dev/crime_population_2016_2020/population_2016_2020/regionwise_population_2017.csv' OVERWRITE INTO TABLE population_1620.population_2017;
+
+2018 year file   LOAD DATA INPATH '/user/maria_dev/crime_population_2016_2020/population_2016_2020/regionwise_population_2018.csv' OVERWRITE INTO TABLE population_1620.population_2018;
+
+2019 year file   LOAD DATA INPATH '/user/maria_dev/crime_population_2016_2020/population_2016_2020/regionwise_population_2019.csv' OVERWRITE INTO TABLE population_1620.population_2019;
+
+2020 year file   LOAD DATA INPATH '/user/maria_dev/crime_population_2016_2020/population_2016_2020/regionwise_population_2020.csv' OVERWRITE INTO TABLE population_1620.population_2020;

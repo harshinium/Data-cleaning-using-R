@@ -1,0 +1,30 @@
+Question 1:
+*************************partition by year and month************
+
+For dynamic partition
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+
+CREATE TABLE IF NOT EXISTS population_1620.top_five_region(region STRING,Crime_type STRING,Crime_type_count INT) PARTITIONED BY (year STRING,month STRING); 
+
+INSERT INTO TABLE population_1620.top_five_region PARTITION(year="2016",month) SELECT region,crime_type,COUNT(crime_type) 
+as Crime_type_count,month from population_1620.regioncrime_2016 where year = "2016" group by region,crime_type,month ORDER BY crime_type_count DESC;
+
+INSERT INTO TABLE population_1620.top_five_region PARTITION(year="2017",month) SELECT region,crime_type,COUNT(crime_type) 
+as Crime_type_count,month from population_1620.regioncrime_2017 where year = "2017" group by region,crime_type,month ORDER BY crime_type_count DESC;
+
+INSERT INTO TABLE population_1620.top_five_region PARTITION(year="2018",month) SELECT region,crime_type,COUNT(crime_type) 
+as Crime_type_count,month from population_1620.regioncrime_2018 where year = "2018" group by region,crime_type,month ORDER BY crime_type_count DESC;
+
+INSERT INTO TABLE population_1620.top_five_region PARTITION(year="2019",month) SELECT region,crime_type,COUNT(crime_type) 
+as Crime_type_count,month from population_1620.regioncrime_2019 where year = "2019" group by region,crime_type,month ORDER BY crime_type_count DESC;
+
+INSERT INTO TABLE population_1620.top_five_region PARTITION(year="2020",month) SELECT region,crime_type,COUNT(crime_type) 
+as Crime_type_count,month from population_1620.regioncrime_2020 where year = "2020" group by region,crime_type,month ORDER BY crime_type_count DESC;
+
+Validations:
+****************
+select count(*) from top_five_region where year = "2016";
+select count(*) from top_five_region;
+select distinct crime_type from top_five_region;
+select distinct region from top_five_region;

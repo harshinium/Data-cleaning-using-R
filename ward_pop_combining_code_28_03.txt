@@ -1,0 +1,83 @@
+#to do cross check between ward datset and population
+
+library(data.table)    #library to use fread and read gb of data into R or from csv
+library(tidyverse) 
+library(dplyr)  # for data manupulations
+library(readr)  
+library(magrittr) # to use the pipe operator
+library(Hmisc)  # to create random values for Crime.ID column 
+########################################################################
+#read the file in GBs into the RStudio
+ward_data <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/ward_dataset/Lower_Layer_Super_Output_Area_to_Ward_Lookup_in_England_and_Wales.csv")
+View(ward_data)
+
+#ward_dataset path : "C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/ward_dataset/Lower_Layer_Super_Output_Area_to_Ward_Lookup_in_England_and_Wales.csv"
+#######################################################################
+#replace all the blanks with NA
+ward_data[ward_data == ""] <- NA    #replace standard missing values /blanks with NA
+########################################################################
+#to calculate the percentage of missing values to justify why we delete it-- code from helen
+percentmissing_ward <- function(ward_data){(colSums(is.na(ward_data))/nrow(ward_data))*100}
+percentmissing_ward(ward_data)
+###########################################################################
+##to find the summary of missing values and distinct values in the dataframe
+
+ward_data_1 <- ward_data %>% summarise((n= n_distinct(ward_data)),
+                                              (count=sum(is.na(ward_data))))
+ward_data_1
+##############################################################################
+#apply glimpse to get the column names
+glimpse(ward_data)
+##########################################
+#remove FID column(Feature ID) from the ward dataset 
+ward_data$FID <- NULL   #removing V1
+#############################################################################
+#code to provide summary of the values which has the missing values(NA in any row)
+missing_NA <- ward_data %>% select(LSOA11CD,LSOA11NM,WD16CD,WD16NM,LAD16CD,LAD16NM,FID) %>% filter(!complete.cases(.))
+
+View(missing_NA)
+################################################################################
+#get in population dataset to do vlookup with the ward dataset, 
+#ward_data <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/ward_dataset/Lower_Layer_Super_Output_Area_to_Ward_Lookup_in_England_and_Wales.csv")
+#"C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset for population/Population16-20/cleaned population files"
+#change the population_20 change to population_19 for 2019 year and so on..
+
+population_20 <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset for population/Population16-20/cleaned population files/mid20.csv"
+)
+
+View(population_20)
+#change the column name in population dataset 2019 and 2020 from LSOA Code to Area Codes
+
+colnames(population_20)[colnames(population_20) == "LSOA Code"] <- "Area Codes"  # only for 2019 dataset
+#########################################################
+#Firstly do left_joinn and count total rows and again do inner_join to check the row count.if less rows then do missing values step to find the missing data
+#its not missing value but ther eis LSOA name mismatch between ward dataset and population ,so we need to change the name and run inner join again to check the count
+combined_dataset <- inner_join(population_20,ward_data,by = c("Area Codes" = "LSOA11CD", "LSOA Name" = "LSOA11NM"))
+View(combined_dataset)
+glimpse(combined_dataset)
+
+#find missing values in combined_dataset
+missing_NA <- combined_dataset %>% select('Area Codes','LSOA Name','All Ages','0-15','16-29','30-44','45-64','65+','WD16CD','WD16NM','LAD16CD','LAD16NM') %>% filter(!complete.cases(.))
+
+View(missing_NA)
+#####################################
+#to filter the "Rhondda Cynon Taff 023F" from the population datset alone
+
+#filtered <- filter(population_18,'LSOA Name' == "Rhondda Cynon Taff 023F")
+#View(filtered)
+
+#replace values for below rows incase of any missing values found - spelling correction and run the combined_dataset inner join code 
+population_18$`LSOA Name`[population_18$`LSOA Name` == "Rhondda Cynon Taff 023F"] <- "Rhondda Cynon Taf 023F"
+population_18$`LSOA Name`[population_18$`LSOA Name` == "Rhondda Cynon Taff 023G"] <- "Rhondda Cynon Taf 023G"
+population_18$`LSOA Name`[population_18$`LSOA Name` == "Rhondda Cynon Taff 027F"] <- "Rhondda Cynon Taf 027F"
+population_18$`LSOA Name`[population_18$`LSOA Name` == "Rhondda Cynon Taff 027G"] <- "Rhondda Cynon Taf 027G"
+
+############################
+#create a new file with the combined dataset and save it in local
+
+#create a new file with the filtered dataset ,DONT FORGET TO CHANGE THE NEW FILE NAME
+setwd('C:\\Users\\harsh\\Documents\\SHU\\Semester_2\\ADMP_project_work')
+getwd()
+
+write.csv(combined_dataset, file ="population_ward_2020.csv",row.names = FALSE)
+

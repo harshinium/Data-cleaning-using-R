@@ -1,0 +1,164 @@
+Question 3:
+**************************
+CREATE TABLE IF NOT EXISTS population_1620.sheffield_population_2016(area_codes STRING,all_ages INT,sum_of_allages INT,district STRING,region STRING); 
+
+
+SELECT area_codes,all_ages,SUM(all_ages) as sum_of_allages,lad16nm,region  FROM population_1620.population_2016 WHERE Region = "YorkshireandtheHumber" group by  region,lad16nm,all_ages,area_codes ORDER BY sum_of_allages DESC;
+*****************************************************************************************************************************
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2016(area_codes STRING,all_ages INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2016 SELECT area_codes,all_ages,lad16nm,region  FROM population_1620.population_2016 WHERE Region = "YorkshireandtheHumber";
+----------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2017(area_codes STRING,all_ages INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2017 SELECT area_codes,all_ages,lad16nm,region  FROM population_1620.population_2017 WHERE Region = "YorkshireandtheHumber";
+--------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2018(area_codes STRING,all_ages INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2018 SELECT area_codes,all_ages,lad16nm,region  FROM population_1620.population_2018 WHERE Region = "YorkshireandtheHumber";
+-----------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2019(area_codes STRING,all_ages INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2019 SELECT area_codes,all_ages,lad16nm,region  FROM population_1620.population_2019_1 WHERE Region = "YorkshireandtheHumber";
+------------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2020(area_codes STRING,all_ages INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2020 SELECT area_codes,all_ages,lad16nm,region  FROM population_1620.population_2020 WHERE Region = "YorkshireandtheHumber";
+
+********************************************************************************************
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2016 AS SELECT district,sum(all_ages) as sum_of_allages from population_1620.yorkshire_population_2016 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2017 AS SELECT district,sum(all_ages) as sum_of_allages from population_1620.yorkshire_population_2017 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2018 AS SELECT district,sum(all_ages) as sum_of_allages from population_1620.yorkshire_population_2018 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2019 AS SELECT district,sum(all_ages) as sum_of_allages from population_1620.yorkshire_population_2019 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2020 AS SELECT district,sum(all_ages) as sum_of_allages from population_1620.yorkshire_population_2020 group by district
+
+validations:
+select sum(all_ages) from yorkshire_population_2016;
+**********************************************************************************
+crime dataset:
+****************
+For 2016 run below queries:
+******************************
+CREATE TABLE population_1620.crimeYorkshire_2016 
+AS (SELECT year,location,lsoa_name,crime_type,lad16nm,region FROM population_1620.regioncrime_2016 WHERE region= "YorkshireandtheHumber");
+
+CREATE TABLE population_1620.crimeDistrict_2016 
+AS (SELECT crime_type, lad16nm,  COUNT(crime_type) as crime_type_count  FROM population_1620.crimeYorkshire_2016 GROUP BY lad16nm,crime_type ORDER BY crime_type_count DESC)
+
+CREATE TABLE population_1620.district_totalcrime_2016 
+AS (SELECT lad16nm,  SUM(crime_type_count) as total_crime_type_count_districtwise  FROM population_1620.crimedistrict_2016 GROUP BY `lad16nm` ORDER BY total_crime_type_count_districtwise DESC)
+
+join query:
+
+CREATE TABLE crime_population_2016 
+AS SELECT district_totalcrime_2016.lad16nm,
+district_totalcrime_2016.total_crime_type_count_districtwise,
+yorkshire_totalpopulation_2016.sum_of_allages
+FROM district_totalcrime_2016 
+LEFT JOIN yorkshire_totalpopulation_2016 
+ON district_totalcrime_2016.lad16nm =
+yorkshire_totalpopulation_2016.district 
+ORDER BY district_totalcrime_2016 .total_crime_type_count_districtwise DESC;
+***************************************************************************************************
+For 2017:
+***********************
+CREATE TABLE population_1620.crimeYorkshire_2017 
+AS (SELECT year,location,lsoa_name,crime_type,lad16nm,region FROM population_1620.regioncrime_2017 WHERE region= "YorkshireandtheHumber");
+
+CREATE TABLE population_1620.crimeDistrict_2017 
+AS (SELECT lad16nm,  COUNT(crime_type) as crime_type_count  FROM population_1620.crimeYorkshire_2017 GROUP BY lad16nm ORDER BY crime_type_count DESC)
+
+CREATE TABLE crime_population_2017 
+AS SELECT crimeDistrict_2017.lad16nm,
+crimeDistrict_2017.crime_type_count,
+yorkshire_totalpopulation_2017.sum_of_allages
+FROM crimeDistrict_2017 
+LEFT JOIN yorkshire_totalpopulation_2017 
+ON crimeDistrict_2017.lad16nm =
+yorkshire_totalpopulation_2017.district 
+ORDER BY crimeDistrict_2017.crime_type_count DESC;
+*******************************************************
+for 2018:
+
+CREATE TABLE population_1620.crimeYorkshire_2018 
+AS (SELECT year,location,lsoa_name,crime_type,lad16nm,region FROM population_1620.regioncrime_2018 WHERE region= "YorkshireandtheHumber");
+
+CREATE TABLE population_1620.crimeDistrict_2018 
+AS (SELECT lad16nm,  COUNT(crime_type) as crime_type_count  FROM population_1620.crimeYorkshire_2018 GROUP BY lad16nm ORDER BY crime_type_count DESC)
+
+CREATE TABLE crime_population_2018 
+AS SELECT crimeDistrict_2018.lad16nm,
+crimeDistrict_2018.crime_type_count,
+yorkshire_totalpopulation_2018.sum_of_allages
+FROM crimeDistrict_2018 
+LEFT JOIN yorkshire_totalpopulation_2018 
+ON crimeDistrict_2018.lad16nm =
+yorkshire_totalpopulation_2018.district 
+ORDER BY crimeDistrict_2018.crime_type_count DESC;
+
+***********************************************************
+For 2019:
+
+CREATE TABLE population_1620.crimeYorkshire_2019 
+AS (SELECT year,location,lsoa_name,crime_type,lad16nm,region FROM population_1620.regioncrime_2019 WHERE region= "YorkshireandtheHumber");
+
+CREATE TABLE population_1620.crimeDistrict_2019 
+AS (SELECT lad16nm,  COUNT(crime_type) as crime_type_count  FROM population_1620.crimeYorkshire_2019 GROUP BY lad16nm ORDER BY crime_type_count DESC)
+
+CREATE TABLE crime_population_2019 
+AS SELECT crimeDistrict_2019.lad16nm,
+crimeDistrict_2019.crime_type_count,
+yorkshire_totalpopulation_2019.sum_of_allages
+FROM crimeDistrict_2019 
+LEFT JOIN yorkshire_totalpopulation_2019 
+ON crimeDistrict_2019.lad16nm =
+yorkshire_totalpopulation_2019.district 
+ORDER BY crimeDistrict_2019.crime_type_count DESC;
+**********************************************************************
+For 2020:
+
+CREATE TABLE population_1620.crimeYorkshire_2020 
+AS (SELECT year,location,lsoa_name,crime_type,lad16nm,region FROM population_1620.regioncrime_2020 WHERE region= "YorkshireandtheHumber");
+
+CREATE TABLE population_1620.crimeDistrict_2020 
+AS (SELECT lad16nm,  COUNT(crime_type) as crime_type_count  FROM population_1620.crimeYorkshire_2020 GROUP BY lad16nm ORDER BY crime_type_count DESC)
+
+CREATE TABLE crime_population_2020 
+AS SELECT crimeDistrict_2020.lad16nm,
+crimeDistrict_2020.crime_type_count,
+yorkshire_totalpopulation_2020.sum_of_allages
+FROM crimeDistrict_2020 
+LEFT JOIN yorkshire_totalpopulation_2020 
+ON crimeDistrict_2020.lad16nm =
+yorkshire_totalpopulation_2020.district 
+ORDER BY crimeDistrict_2020.crime_type_count DESC;
+
+***************************************************************************
+To be implemented: has been implemented finally:
+*************************************************
+
+to find which crime type is high in each district.. we are getting the crime type count district wise in Yorkshireandthehumber
+
+For the year 2016:
+ALready there is a table -- check in crimeDistrict_2016 ...table
+
+CREATE TABLE population_1620.crimeDistrict_countforeachtypeofcrime_2017 
+AS (SELECT crime_type, lad16nm,  COUNT(crime_type) as crime_type_count  FROM population_1620.crimeYorkshire_2017 GROUP BY lad16nm,crime_type ORDER BY crime_type_count DESC)
+
+
+CREATE TABLE population_1620.crimeDistrict_countforeachtypeofcrime_2018 
+AS (SELECT crime_type, lad16nm,  COUNT(crime_type) as crime_type_count  FROM population_1620.crimeYorkshire_2018 GROUP BY lad16nm,crime_type ORDER BY crime_type_count DESC)
+
+
+CREATE TABLE population_1620.crimeDistrict_countforeachtypeofcrime_2019 
+AS (SELECT crime_type, lad16nm,  COUNT(crime_type) as crime_type_count  FROM population_1620.crimeYorkshire_2019 GROUP BY lad16nm,crime_type ORDER BY crime_type_count DESC)
+
+
+CREATE TABLE population_1620.crimeDistrict_countforeachtypeofcrime_2020 
+AS (SELECT crime_type, lad16nm,  COUNT(crime_type) as crime_type_count  FROM population_1620.crimeYorkshire_2020 GROUP BY lad16nm,crime_type ORDER BY crime_type_count DESC)
+*************************************************************************
+

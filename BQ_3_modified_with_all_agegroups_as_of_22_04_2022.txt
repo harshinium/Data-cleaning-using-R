@@ -1,0 +1,119 @@
+22/04/2022: recreating yorkshire _population_2016 year table with all age groups in it; for all the years
+************************
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2016(area_codes STRING,lsoa_name STRING,all_ages INT,X0_15 INT,X16_29 INT,X30_44 INT,X45_64 INT,X65_plus INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2016 SELECT area_codes,lsoa_name,all_ages,zero_fifteen,sixteen_twentynine,thirty_fortyfour,fortyfive_sixtyfour,sixtyfive_plus,lad16nm,region  FROM population_1620.population_2016 WHERE Region = "YorkshireandtheHumber";
+----------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2017(area_codes STRING,lsoa_name STRING,all_ages INT,X0_15 INT,X16_29 INT,X30_44 INT,X45_64 INT,X65_plus INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2017 SELECT area_codes,lsoa_name,all_ages,zero_fifteen,sixteen_twentynine,thirty_fortyfour,fortyfive_sixtyfour,sixtyfive_plus,lad16nm,region  FROM population_1620.population_2017 WHERE Region = "YorkshireandtheHumber";
+----------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2018(area_codes STRING,lsoa_name STRING,all_ages INT,X0_15 INT,X16_29 INT,X30_44 INT,X45_64 INT,X65_plus INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2018 SELECT area_codes,lsoa_name,all_ages,zero_fifteen,sixteen_twentynine,thirty_fortyfour,fortyfive_sixtyfour,sixtyfive_plus,lad16nm,region  FROM population_1620.population_2018 WHERE Region = "YorkshireandtheHumber";
+-----------------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2019(area_codes STRING,lsoa_name STRING,all_ages INT,X0_15 INT,X16_29 INT,X30_44 INT,X45_64 INT,X65_plus INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2019 SELECT area_codes,lsoa_name,all_ages,zero_fifteen,sixteen_twentynine,thirty_fortyfour,fortyfive_sixtyfour,sixtyfive_plus,lad16nm,region  FROM population_1620.population_2019_1 WHERE Region = "YorkshireandtheHumber";
+------------------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2020(area_codes STRING,lsoa_name STRING,all_ages INT,X0_15 INT,X16_29 INT,X30_44 INT,X45_64 INT,X65_plus INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2020 SELECT area_codes,lsoa_name,all_ages,zero_fifteen,sixteen_twentynine,thirty_fortyfour,fortyfive_sixtyfour,sixtyfive_plus,lad16nm,region  FROM population_1620.population_2020 WHERE Region = "YorkshireandtheHumber";
+******************************
+part two: creating yorkshire_totalpopulation_2016 table for summing up all the ages:
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2016 AS SELECT district,sum(all_ages) as sum_of_allages,sum(x0_15) as Children,sum(x16_29) as Youngsters,sum(x30_44) as Early_middleage,sum(x45_64) as Middle_adulthood,sum(x65_plus) as Senior_citizens from population_1620.yorkshire_population_2016 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2017 AS SELECT district,sum(all_ages) as sum_of_allages,sum(x0_15) as Children,sum(x16_29) as Youngsters,sum(x30_44) as Early_middleage,sum(x45_64) as Middle_adulthood,sum(x65_plus) as Senior_citizens from population_1620.yorkshire_population_2017 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2018 AS SELECT district,sum(all_ages) as sum_of_allages,sum(x0_15) as Children,sum(x16_29) as Youngsters,sum(x30_44) as Early_middleage,sum(x45_64) as Middle_adulthood,sum(x65_plus) as Senior_citizens from population_1620.yorkshire_population_2018 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2019 AS SELECT district,sum(all_ages) as sum_of_allages,sum(x0_15) as Children,sum(x16_29) as Youngsters,sum(x30_44) as Early_middleage,sum(x45_64) as Middle_adulthood,sum(x65_plus) as Senior_citizens from population_1620.yorkshire_population_2019 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2020 AS SELECT district,sum(all_ages) as sum_of_allages,sum(x0_15) as Children,sum(x16_29) as Youngsters,sum(x30_44) as Early_middleage,sum(x45_64) as Middle_adulthood,sum(x65_plus) as Senior_citizens from population_1620.yorkshire_population_2020 group by district
+**************************************
+PART three: joining the crime total count for the district with population count for each district in yorkshire and the humber: for all age groups:
+year: 2016:
+***************************************
+CREATE TABLE crime_population_2016 
+AS SELECT district_totalcrime_2016.lad16nm,
+district_totalcrime_2016.total_crime_type_count_districtwise,
+yorkshire_totalpopulation_2016.sum_of_allages,
+yorkshire_totalpopulation_2016.Children,
+yorkshire_totalpopulation_2016.youngsters,
+yorkshire_totalpopulation_2016.early_middleage,
+yorkshire_totalpopulation_2016.middle_adulthood,
+yorkshire_totalpopulation_2016.senior_citizens
+FROM district_totalcrime_2016 
+LEFT JOIN yorkshire_totalpopulation_2016 
+ON district_totalcrime_2016.lad16nm =
+yorkshire_totalpopulation_2016.district 
+ORDER BY district_totalcrime_2016.total_crime_type_count_districtwise DESC;
+------------------------------
+For the eyar 2017:
+*****************************
+CREATE TABLE crime_population_2017 
+AS SELECT crimeDistrict_2017.lad16nm,
+crimeDistrict_2017.crime_type_count,
+yorkshire_totalpopulation_2017.sum_of_allages,
+yorkshire_totalpopulation_2017.Children,
+yorkshire_totalpopulation_2017.youngsters,
+yorkshire_totalpopulation_2017.early_middleage,
+yorkshire_totalpopulation_2017.middle_adulthood,
+yorkshire_totalpopulation_2017.senior_citizens
+FROM crimeDistrict_2017 
+LEFT JOIN yorkshire_totalpopulation_2017 
+ON crimeDistrict_2017.lad16nm =
+yorkshire_totalpopulation_2017.district 
+ORDER BY crimeDistrict_2017.crime_type_count DESC;
+---------------------------------------------
+For year 2018:
+***********************
+CREATE TABLE crime_population_2018 
+AS SELECT crimeDistrict_2018.lad16nm,
+crimeDistrict_2018.crime_type_count,
+yorkshire_totalpopulation_2018.sum_of_allages,
+yorkshire_totalpopulation_2018.Children,
+yorkshire_totalpopulation_2018.youngsters,
+yorkshire_totalpopulation_2018.early_middleage,
+yorkshire_totalpopulation_2018.middle_adulthood,
+yorkshire_totalpopulation_2018.senior_citizens
+FROM crimeDistrict_2018 
+LEFT JOIN yorkshire_totalpopulation_2018 
+ON crimeDistrict_2018.lad16nm =
+yorkshire_totalpopulation_2018.district 
+ORDER BY crimeDistrict_2018.crime_type_count DESC;
+---------------------------------------------------
+For the year 2019:
+************************
+CREATE TABLE crime_population_2019 
+AS SELECT crimeDistrict_2019.lad16nm,
+crimeDistrict_2019.crime_type_count,
+yorkshire_totalpopulation_2019.sum_of_allages,
+yorkshire_totalpopulation_2019.Children,
+yorkshire_totalpopulation_2019.youngsters,
+yorkshire_totalpopulation_2019.early_middleage,
+yorkshire_totalpopulation_2019.middle_adulthood,
+yorkshire_totalpopulation_2019.senior_citizens
+FROM crimeDistrict_2019 
+LEFT JOIN yorkshire_totalpopulation_2019 
+ON crimeDistrict_2019.lad16nm =
+yorkshire_totalpopulation_2019.district 
+ORDER BY crimeDistrict_2019.crime_type_count DESC;
+-------------------------------------------------------------
+For the year 2020
+******************************
+CREATE TABLE crime_population_2020 
+AS SELECT crimeDistrict_2020.lad16nm,
+crimeDistrict_2020.crime_type_count,
+yorkshire_totalpopulation_2020.sum_of_allages,
+yorkshire_totalpopulation_2020.Children,
+yorkshire_totalpopulation_2020.youngsters,
+yorkshire_totalpopulation_2020.early_middleage,
+yorkshire_totalpopulation_2020.middle_adulthood,
+yorkshire_totalpopulation_2020.senior_citizens
+FROM crimeDistrict_2020 
+LEFT JOIN yorkshire_totalpopulation_2020 
+ON crimeDistrict_2020.lad16nm =
+yorkshire_totalpopulation_2020.district 
+ORDER BY crimeDistrict_2020.crime_type_count DESC;

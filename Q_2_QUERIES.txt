@@ -1,0 +1,18 @@
+Question_2:
+****************
+CREATE TABLE IF NOT EXISTS population_1620.top_five_crimetypes(region STRING,Crime_type STRING,Crime_type_count INT) PARTITIONED BY(year STRING); 
+
+INSERT INTO TABLE population_1620.top_five_crimetypes PARTITION(year="2016") SELECT region,crime_type,COUNT(crime_type) as 
+Crime_type_count from population_1620.regioncrime_2016 group by region,crime_type ORDER BY crime_type_count DESC;
+
+INSERT INTO TABLE population_1620.top_five_crimetypes PARTITION(year="2017") SELECT region,crime_type,COUNT(crime_type) as 
+Crime_type_count from population_1620.regioncrime_2017 group by region,crime_type ORDER BY crime_type_count DESC;
+
+INSERT INTO TABLE population_1620.top_five_crimetypes PARTITION(year="2018") SELECT region,crime_type,COUNT(crime_type) as 
+Crime_type_count from population_1620.regioncrime_2018 group by region,crime_type ORDER BY crime_type_count DESC;
+
+INSERT INTO TABLE population_1620.top_five_crimetypes PARTITION(year="2019") SELECT region,crime_type,COUNT(crime_type) as 
+Crime_type_count from population_1620.regioncrime_2019 group by region,crime_type ORDER BY crime_type_count DESC;
+
+INSERT INTO TABLE population_1620.top_five_crimetypes PARTITION(year="2020") SELECT region,crime_type,COUNT(crime_type) as 
+Crime_type_count from population_1620.regioncrime_2020 group by region,crime_type ORDER BY crime_type_count DESC;

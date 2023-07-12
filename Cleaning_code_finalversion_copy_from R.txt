@@ -1,0 +1,86 @@
+library(data.table)    #library to use fread and read gb of data into R or from csv
+library(tidyverse) 
+library(dplyr)  # for data manupulations
+library(readr)  
+library(magrittr) # to use the pipe operator
+library(Hmisc)  # to create random values for Crime.ID column 
+########################################################################
+#read the file in GBs into the RStudio
+#cleaned_all_crime file "C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/cleaned dataset/cleaned_crime_dataset_from_helen/Cleaned_all_crime/Cleaned_all_crime.csv"
+data <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/cleaned dataset/cleaned_crime_dataset_from_helen/Cleaned_all_crime/Cleaned_all_crime.csv")
+View(data)  #total no of records for 2016 is 6,044,189
+############################################################################
+#creating a copy of the dataframe data
+data1   <- data   #creating a sample dataframe
+View(data1)
+##############################################################################
+#below code to remove the unwanted columns , irrelevant observations are removed from the dataset
+data1$V1 <- NULL   #removing V1
+data1$X <- NULL  #removed
+data1$Longitude <- NULL   #removed
+data1$Latitude <- NULL   #removed
+data1$Falls.within <-NULL   #removed
+data1$Reported.by <- NULL #removed
+data1$Context <- NULL  #removed
+data1$Last.outcome.category  <- NULL  #removed
+#####################################################################################
+#replace all the blanks with NA
+data1[data1 == ""] <- NA    #replace standard missing values /blanks with NA
+###################################################################################################
+#to calculate the percentage of missing values to justify why we delete it-- code from helen
+percentmissing <- function(data1){(colSums(is.na(data1))/nrow(data1))*100}
+percentmissing(data1)
+######################################################################################################
+#replace the missing values with NA with random values using hmisc function , only for Crime.ID column
+#explore below method
+
+View(data1)
+library(Hmisc)   #to impute missing values randomnly
+data1$Crime.ID <- with(data1,impute(Crime.ID,"random"))
+View(data1)
+###################################################################################################################
+#to remove the duplicated values only in the column Crime.ID --> step1 
+#remove the duplicated rows in the dataset completely
+
+Crime_ID_dup <- data1[!duplicated(data1$Crime.ID,)]    #columnwise
+View(Crime_ID_dup)
+
+data_dup <- Crime_ID_dup[!duplicated(Crime_ID_dup),]    #rowwise
+View(data_dup)
+####################################################################################################################
+##to find the summary of missing values and distinct values in the dataframe
+
+data2 <- data_dup %>% summarise((n= n_distinct(data_dup)),
+                                (count=sum(is.na(data_dup))))
+
+View(data2)
+#####################################################################################################################
+#remove the missing values (NA) from the remaining columns LSOA.name, LSOA.code for verifying total number of rows check
+
+#omit_lsoa <- data_dup %>% select(LSOA.name) %>% na.omit()  # to remove na values from LSOA name column
+#omit_lsoa_code <- data_dup %>% select(LSOA.code) %>% na.omit() #to remove na values from LSOA code column
+
+#data2 <- omit_na %>% summarise((n= n_distinct(omit_na$Crime.ID)),
+                                #(count=sum(is.na(Crime.ID))))
+
+#View(omit_lsoa)    #need to check for other values which are na or blanks
+#View(omit_lsoa_code)
+######################################################################################################################
+#remove missing values entirely from the dataset
+
+omit_na <- data_dup %>% select(Crime.ID,Month,Location,LSOA.code,LSOA.name,Crime.type) %>% na.omit()
+View(omit_na)
+
+#################################################################################################
+#create a new file with the filtered dataset 
+setwd('C:\\Users\\harsh\\Documents\\SHU\\Semester_2\\ADMP_project_work')
+getwd()
+
+write.csv(omit_na, file ="streetcrime1_2016.csv",row.names = FALSE)
+
+####################################################################################################
+#"C:\Users\harsh\Documents\SHU\Semester_2\ADMP_project_work\streetcrime1_2016.csv"
+cleaned_data_crime <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/streetcrime1_2016.csv")
+View(cleaned_data_crime)
+
+###################################################################################################

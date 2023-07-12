@@ -1,0 +1,27 @@
+*****************************************************************************************************************************
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2016(area_codes STRING,all_ages INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2016 SELECT area_codes,all_ages,lad16nm,region  FROM population_1620.population_2016 WHERE Region = "YorkshireandtheHumber";
+----------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2017(area_codes STRING,all_ages INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2017 SELECT area_codes,all_ages,lad16nm,region  FROM population_1620.population_2017 WHERE Region = "YorkshireandtheHumber";
+--------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2018(area_codes STRING,all_ages INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2018 SELECT area_codes,all_ages,lad16nm,region  FROM population_1620.population_2018 WHERE Region = "YorkshireandtheHumber";
+-----------------
+CREATE TABLE IF NOT EXISTS population_1620.yorkshire_population_2019(area_codes STRING,all_ages INT,district STRING,region STRING); 
+
+INSERT INTO TABLE population_1620.yorkshire_population_2019 SELECT area_codes,all_ages,lad16nm,region  FROM population_1620.population_2019 WHERE Region = "YorkshireandtheHumber";
+------------------
+
+********************************************************************************************
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2016 AS SELECT district,sum(all_ages) as sum_of_allages from population_1620.yorkshire_population_2016 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2017 AS SELECT district,sum(all_ages) as sum_of_allages from population_1620.yorkshire_population_2017 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2018 AS SELECT district,sum(all_ages) as sum_of_allages from population_1620.yorkshire_population_2018 group by district
+
+CREATE TABLE population_1620.Yorkshire_totalpopulation_2019 AS SELECT district,sum(all_ages) as sum_of_allages from population_1620.yorkshire_population_2019 group by district
+

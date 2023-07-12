@@ -1,0 +1,36 @@
+CREATE TABLE IF NOT EXISTS population_1620.sheffield_crimecountareawise_2016_20(city_name STRING,Area_name STRING,Crime_type STRING,Crime_type_count INT) PARTITIONED BY (year STRING); 
+
+INSERT INTO TABLE population_1620.sheffield_crimecountareawise_2016_20 PARTITION(year="2016") SELECT lad16nm,lsoa_name,crime_type,COUNT(crime_type) 
+as Crime_type_count from population_1620.crimeYorkshire_2016 where year = "2016" and lad16nm = "Sheffield" group by lad16nm,lsoa_name,crime_type ORDER BY crime_type_count DESC
+
+INSERT INTO TABLE population_1620.sheffield_crimecountareawise_2016_20 PARTITION(year="2017") SELECT lad16nm,lsoa_name,crime_type,COUNT(crime_type) 
+as Crime_type_count from population_1620.crimeYorkshire_2017 where year = "2017" and lad16nm = "Sheffield" group by lad16nm,lsoa_name,crime_type ORDER BY crime_type_count DESC
+
+INSERT INTO TABLE population_1620.sheffield_crimecountareawise_2016_20 PARTITION(year="2018") SELECT lad16nm,lsoa_name,crime_type,COUNT(crime_type) 
+as Crime_type_count from population_1620.crimeYorkshire_2018 where year = "2018" and lad16nm = "Sheffield" group by lad16nm,lsoa_name,crime_type ORDER BY crime_type_count DESC
+
+INSERT INTO TABLE population_1620.sheffield_crimecountareawise_2016_20 PARTITION(year="2019") SELECT lad16nm,lsoa_name,crime_type,COUNT(crime_type) 
+as Crime_type_count from population_1620.crimeYorkshire_2019 where year = "2019" and lad16nm = "Sheffield" group by lad16nm,lsoa_name,crime_type ORDER BY crime_type_count DESC
+
+INSERT INTO TABLE population_1620.sheffield_crimecountareawise_2016_20 PARTITION(year="2020") SELECT lad16nm,lsoa_name,crime_type,COUNT(crime_type) 
+as Crime_type_count from population_1620.crimeYorkshire_2020 where year = "2020" and lad16nm = "Sheffield" group by lad16nm,lsoa_name,crime_type ORDER BY crime_type_count DESC
+
+validations:
+
+select count(distinct Area_name) from sheffield_crimecountareawise_2016_20 where year = "2016";
+select count(distinct Area_name) from sheffield_crimecountareawise_2016_20 where year = "2017";
+select count(distinct Area_name) from sheffield_crimecountareawise_2016_20 where year = "2018";
+select count(distinct Area_name) from sheffield_crimecountareawise_2016_20 where year = "2019";
+select count(distinct Area_name) from sheffield_crimecountareawise_2016_20 where year = "2020";
+select distinct Area_name from sheffield_crimecountareawise_2016_20 where year = "2016";
+select distinct Area_name from sheffield_crimecountareawise_2016_20 where year = "2017";
+select distinct Area_name from sheffield_crimecountareawise_2016_20 where year = "2018";
+select distinct Area_name from sheffield_crimecountareawise_2016_20 where year = "2019";
+select distinct Area_name from sheffield_crimecountareawise_2016_20 where year = "2020";
+select count(*) from sheffield_crimecountareawise_2016_20 where year = "2016"; ans==3712  (2016,2017,2018,2019,2020)
+select count(*) from sheffield_crimecountareawise_2016_20 where year = "2017"; ans==3447
+select count(*) from sheffield_crimecountareawise_2016_20 where year = "2018"; ans==3661
+select count(*) from sheffield_crimecountareawise_2016_20 where year = "2019"; ans==3712
+select count(*) from sheffield_crimecountareawise_2016_20 where year = "2020";ans==3611
+total records in the table sheffield_crimecountareawise_2016_20====> 18143
+******************************************************************************************************

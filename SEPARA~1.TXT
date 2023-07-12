@@ -1,0 +1,30 @@
+library(data.table)    #library to use fread and read gb of data into R or from csv
+library(tidyverse) 
+library(dplyr)  # for data manupulations
+library(readr)  
+library(magrittr) # to use the pipe operator
+library(Hmisc)  # to create random values for Crime.ID column 
+
+
+regioncrime_2016 <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/regionwise_crime_16_20/regionwise_crime_2016.csv")
+
+regioncrime_2017 <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/regionwise_crime_16_20/regionwise_crime_2017.csv")
+
+regioncrime_2018 <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/regionwise_crime_16_20/regionwise_crime_2018.csv")
+
+regioncrime_2019 <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/regionwise_crime_16_20/regionwise_crime_2019.csv")
+
+regioncrime_2020 <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/regionwise_crime_16_20/regionwise_crime_2020.csv")
+
+summary(regioncrime_2019)
+#create a new file with the filtered dataset ,DONT FORGET TO CHANGE THE NEW FILE NAME
+setwd('C:\\Users\\harsh\\Documents\\SHU\\Semester_2\\ADMP_project_work')
+getwd()
+
+#separate the month into year and month columns for easy use
+
+regcrimer_2019 <- regioncrime_2019 %>% separate(Month,into = c('year','month'),sep ='-')    #change the file name for each year accordingly please
+View(regioncrime_2019)
+summary(regioncrime_2019)  #get details of the column created
+
+write.csv(regcrimer_2018, file ="regioncrime_2018.csv",row.names = FALSE)

@@ -1,0 +1,43 @@
+# Loading requires the following packages
+library(magrittr) ## Mechanism for chaining commands
+library(ggplot2)
+library(dplyr)
+library(readr)
+setwd('C:\\Users\\harsh\\Documents\\SHU\\Semester_2\\ADMP_project_work')
+getwd()
+# Working with many files is hectic, so we decided to merge
+# my data from January 2014 to  December 2015 into single files
+# for street
+multiMerge = function(mypath){
+filenames = list.files(path = mypath, full.names = TRUE)
+datalist = lapply(filenames,
+function(x){read.csv(file = x,
+header = TRUE,
+stringsAsFactors = FALSE)})
+Reduce(function(x,y) {merge(x, y, all = TRUE)}, datalist)
+}
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_01")
+write.csv(all_street_data, file ="streetcrime_jan17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_02")
+write.csv(all_street_data, file ="streetcrime_feb17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_03")
+write.csv(all_street_data, file ="streetcrime_mar17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_04")
+write.csv(all_street_data, file ="streetcrime_apr17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_05")
+write.csv(all_street_data, file ="streetcrime_may17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_06")
+write.csv(all_street_data, file ="streetcrime_jun17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_07")
+write.csv(all_street_data, file ="streetcrime_july17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_08")
+write.csv(all_street_data, file ="streetcrime_aug17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_09")
+write.csv(all_street_data, file ="streetcrime_sep17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_10")
+write.csv(all_street_data, file ="streetcrime_oct17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_11")
+write.csv(all_street_data, file ="streetcrime_nov17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_uk_dataset/2017_12")
+write.csv(all_street_data, file ="streetcrime_dec17.csv")
+all_street_data <- multiMerge("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Dataset_for_UK_street_crime/2017_monthwise_combined_files")

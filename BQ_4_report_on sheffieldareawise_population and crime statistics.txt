@@ -1,0 +1,142 @@
+combining crime dataset--areas(345) in sheffield with the population dataset areawise
+
+step 1: create totalpopulation for sheffield areawise table:
+
+CREATE TABLE population_1620.sheffield_totalpopulation_2016 AS SELECT region,district,lsoa_name,all_ages as total_population,X0_15 as Children,
+X16_29 as Youngsters,X30_44 as Early_middleage,X45_64 as Middle_adulthood,X65_plus as Senior_citizens from population_1620.yorkshire_population_2016 
+where district = "Sheffield" and region = "YorkshireandtheHumber";
+
+CREATE TABLE population_1620.sheffield_totalpopulation_2017 AS SELECT region,district,lsoa_name,all_ages as total_population,X0_15 as Children,
+X16_29 as Youngsters,X30_44 as Early_middleage,X45_64 as Middle_adulthood,X65_plus as Senior_citizens from population_1620.yorkshire_population_2017 
+where district = "Sheffield" and region = "YorkshireandtheHumber";
+
+CREATE TABLE population_1620.sheffield_totalpopulation_2018 AS SELECT region,district,lsoa_name,all_ages as total_population,X0_15 as Children,
+X16_29 as Youngsters,X30_44 as Early_middleage,X45_64 as Middle_adulthood,X65_plus as Senior_citizens from population_1620.yorkshire_population_2018 
+where district = "Sheffield" and region = "YorkshireandtheHumber";
+
+CREATE TABLE population_1620.sheffield_totalpopulation_2019 AS SELECT region,district,lsoa_name,all_ages as total_population,X0_15 as Children,
+X16_29 as Youngsters,X30_44 as Early_middleage,X45_64 as Middle_adulthood,X65_plus as Senior_citizens from population_1620.yorkshire_population_2019 
+where district = "Sheffield" and region = "YorkshireandtheHumber";
+
+CREATE TABLE population_1620.sheffield_totalpopulation_2020 AS SELECT region,district,lsoa_name,all_ages as total_population,X0_15 as Children,
+X16_29 as Youngsters,X30_44 as Early_middleage,X45_64 as Middle_adulthood,X65_plus as Senior_citizens from population_1620.yorkshire_population_2020 
+where district = "Sheffield" and region = "YorkshireandtheHumber"; 
+
+validation checks:
+select count(*) from sheffield_totalpopulation_2016;
+select count(*) from sheffield_totalpopulation_2017;
+
+select count(*) from sheffield_totalpopulation_2018;
+
+select count(*) from sheffield_totalpopulation_2019;
+
+select count(*) from sheffield_totalpopulation_2020;
+-------------------------------------------------------------
+step 2 : combining crime dataset with population based on lsoa_name as primary key:
+
+year: 2016  sheffield_crimecount_areawise_2016_20 and sheffield_totalpopulation_2017,2018,2019,2020 yearwise
+----------------------------------------------------------------------------
+For 2016:
+------------------------------------------------------------------------
+CREATE TABLE population_1620.sheffield_crime_population_report                                              
+AS SELECT sheffield_totalpopulation_2016.district,
+sheffield_crimecount_areawise_2016_20.area_name,
+sheffield_crimecount_areawise_2016_20.year,
+sheffield_crimecount_areawise_2016_20.crime_count,
+sheffield_totalpopulation_2016.total_population,
+sheffield_totalpopulation_2016.Children,
+sheffield_totalpopulation_2016.youngsters,
+sheffield_totalpopulation_2016.early_middleage,
+sheffield_totalpopulation_2016.middle_adulthood,
+sheffield_totalpopulation_2016.senior_citizens
+FROM sheffield_crimecount_areawise_2016_20 
+LEFT JOIN sheffield_totalpopulation_2016 
+ON sheffield_crimecount_areawise_2016_20.area_name =
+sheffield_totalpopulation_2016.lsoa_name 
+where sheffield_crimecount_areawise_2016_20.year="2016"
+ORDER BY sheffield_crimecount_areawise_2016_20.crime_count DESC;
+----------------------------------------------------------------------------
+For 2017:
+--------------------------------------------------------------------------
+INSERT INTO TABLE population_1620.sheffield_crime_population_report                                               
+SELECT sheffield_totalpopulation_2017.district,
+sheffield_crimecount_areawise_2016_20.area_name,
+sheffield_crimecount_areawise_2016_20.year,
+sheffield_crimecount_areawise_2016_20.crime_count,
+sheffield_totalpopulation_2017.total_population,
+sheffield_totalpopulation_2017.Children,
+sheffield_totalpopulation_2017.youngsters,
+sheffield_totalpopulation_2017.early_middleage,
+sheffield_totalpopulation_2017.middle_adulthood,
+sheffield_totalpopulation_2017.senior_citizens
+FROM sheffield_crimecount_areawise_2016_20 
+LEFT JOIN sheffield_totalpopulation_2017 
+ON sheffield_crimecount_areawise_2016_20.area_name =
+sheffield_totalpopulation_2017.lsoa_name 
+where sheffield_crimecount_areawise_2016_20.year="2017"
+ORDER BY sheffield_crimecount_areawise_2016_20.crime_count DESC;
+-------------------------------------------------------------------------
+for 2018:
+--------------------
+INSERT INTO TABLE population_1620.sheffield_crime_population_report                                               
+SELECT sheffield_totalpopulation_2018.district,
+sheffield_crimecount_areawise_2016_20.area_name,
+sheffield_crimecount_areawise_2016_20.year,
+sheffield_crimecount_areawise_2016_20.crime_count,
+sheffield_totalpopulation_2018.total_population,
+sheffield_totalpopulation_2018.Children,
+sheffield_totalpopulation_2018.youngsters,
+sheffield_totalpopulation_2018.early_middleage,
+sheffield_totalpopulation_2018.middle_adulthood,
+sheffield_totalpopulation_2018.senior_citizens
+FROM sheffield_crimecount_areawise_2016_20 
+LEFT JOIN sheffield_totalpopulation_2018 
+ON sheffield_crimecount_areawise_2016_20.area_name =
+sheffield_totalpopulation_2018.lsoa_name 
+where sheffield_crimecount_areawise_2016_20.year="2018"
+ORDER BY sheffield_crimecount_areawise_2016_20.crime_count DESC;
+-------------------------------------------------------------------------
+for 2019
+--------------------------
+INSERT INTO TABLE population_1620.sheffield_crime_population_report                                               
+SELECT sheffield_totalpopulation_2019.district,
+sheffield_crimecount_areawise_2016_20.area_name,
+sheffield_crimecount_areawise_2016_20.year,
+sheffield_crimecount_areawise_2016_20.crime_count,
+sheffield_totalpopulation_2019.total_population,
+sheffield_totalpopulation_2019.Children,
+sheffield_totalpopulation_2019.youngsters,
+sheffield_totalpopulation_2019.early_middleage,
+sheffield_totalpopulation_2019.middle_adulthood,
+sheffield_totalpopulation_2019.senior_citizens
+FROM sheffield_crimecount_areawise_2016_20 
+LEFT JOIN sheffield_totalpopulation_2019 
+ON sheffield_crimecount_areawise_2016_20.area_name =
+sheffield_totalpopulation_2019.lsoa_name 
+where sheffield_crimecount_areawise_2016_20.year="2019"
+ORDER BY sheffield_crimecount_areawise_2016_20.crime_count DESC;
+--------------------------------------------------------------------
+For 2020:
+-----------------
+INSERT INTO TABLE population_1620.sheffield_crime_population_report                                               
+SELECT sheffield_totalpopulation_2020.district,
+sheffield_crimecount_areawise_2016_20.area_name,
+sheffield_crimecount_areawise_2016_20.year,
+sheffield_crimecount_areawise_2016_20.crime_count,
+sheffield_totalpopulation_2020.total_population,
+sheffield_totalpopulation_2020.Children,
+sheffield_totalpopulation_2020.youngsters,
+sheffield_totalpopulation_2020.early_middleage,
+sheffield_totalpopulation_2020.middle_adulthood,
+sheffield_totalpopulation_2020.senior_citizens
+FROM sheffield_crimecount_areawise_2016_20 
+LEFT JOIN sheffield_totalpopulation_2020 
+ON sheffield_crimecount_areawise_2016_20.area_name =
+sheffield_totalpopulation_2020.lsoa_name 
+where sheffield_crimecount_areawise_2016_20.year="2020"
+ORDER BY sheffield_crimecount_areawise_2016_20.crime_count DESC;
+
+-----------------------------
+Validations:
+
+to be added..

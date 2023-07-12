@@ -1,0 +1,143 @@
+#to do cross check between ward datset and population
+
+library(data.table)    #library to use fread and read gb of data into R or from csv
+library(tidyverse) 
+library(dplyr)  # for data manupulations
+library(readr)  
+library(magrittr) # to use the pipe operator
+library(Hmisc)  # to create random values for Crime.ID column 
+
+#fread the cleaned file for the year 2016
+#"C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Ward and population combined dataset/population_ward_2016.csv"
+#population_16 <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Ward and population combined dataset/population_ward_2017.csv",sep=",",quote=FALSE)
+
+population_16 <- fread("C:/Users/harsh/Documents/SHU/Semester_2/ADMP_project_work/Assesment 2/Datasets/Ward and population combined dataset/population_ward_2016.csv")
+
+View(population_16)
+#change the column name in population dataset 2019 and 2020 from LSOA Code to Area Codes
+
+
+#replace values for below rows incase of any missing values found - spelling correction and run the combined_dataset inner join code 
+#population_18$`LSOA Name`[population_18$`LSOA Name` == "Rhondda Cynon Taff 023F"] <- "Rhondda Cynon Taf 023F"
+#population_18$`LSOA Name`[population_18$`LSOA Name` == "Rhondda Cynon Taff 023G"] <- "Rhondda Cynon Taf 023G"
+#population_18$`LSOA Name`[population_18$`LSOA Name` == "Rhondda Cynon Taff 027F"] <- "Rhondda Cynon Taf 027F"
+#population_18$`LSOA Name`[population_18$`LSOA Name` == "Rhondda Cynon Taff 027G"] <- "Rhondda Cynon Taf 027G"
+
+
+#create a new file with the filtered dataset ,DONT FORGET TO CHANGE THE NEW FILE NAME
+#setwd('C:\\Users\\harsh\\Documents\\SHU\\Semester_2\\ADMP_project_work')
+#getwd()
+
+#cross verfiy each region using below commands
+#northeast
+#North_East_2016 <- population_16[population_16$LAD16NM %in% c("Gateshead","South Tyneside","Sunderland","Newcastle upon Tyne","North Tyneside","Hartlepool","Middlesbrough","Redcar and Cleveland","Stockton-on-Tees","Darlington","County Durham","Northumberland"), ]
+
+#NORTH WEST
+#North_west_2016 <- population_16[population_16$LAD16NM %in% c("Allerdale","Barrow-in-Furness","Carlisle","Copeland","Eden","South Lakeland","Burnley","Chorley","Fylde","Hyndburn","Lancaster","Pendle","Preston","Ribble Valley","Rossendale","South Ribble","West Lancashire","Wyre","Bolton","Bury","Manchester","Oldham","Rochdale","Salford","Stockport","Tameside","Trafford","Wigan","Knowsley","Liverpool","St. Helens","Sefton","Wirral","Cheshire East","Halton","Warrington","Cheshire West and Chester","Blackburn with Darwen","Blackpool"), ]
+#View(North_west_2016)
+
+#yorkshire and the humber
+#yorkshire_humber_2016 <- population_16[population_16$LAD16NM %in% c("Craven","Hambleton","Harrogate","Richmondshire","Ryedale","Scarborough","Selby","Barnsley","Doncaster","Rotherham","Sheffield","Bradford","Calderdale","Kirklees","Leeds","Wakefield","Kingston upon Hull, City of","East Riding of Yorkshire","North East Lincolnshire","York","North Lincolnshire"),]
+#View(yorkshire_humber_2016)
+
+#east midlands
+#east_midlands <- population_16[population_16$LAD16NM %in% c("Amber Valley","Bolsover","Chesterfield","Derbyshire Dales","Erewash","High Peak","North East Derbyshire","South Derbyshire","Blaby","Charnwood","Harborough","Hinckley and Bosworth","Melton","North West Leicestershire","Oadby and Wigston","Boston","East Lindsey","Lincoln","North Kesteven","South Holland","South Kesteven","West Lindsey","Corby","Daventry","East Northamptonshire","Kettering","Northampton","South Northamptonshire","Wellingborough","Ashfield","Bassetlaw","Broxtowe","Gedling","Mansfield","Newark and Sherwood","Rushcliffe","Derby","Leicester","Rutland","Nottingham"),]
+
+#west midlands
+#west_midlands <- population_16[population_16$LAD16NM %in% c("Cannock Chase","East Staffordshire","Lichfield","Newcastle-under-Lyme","South Staffordshire","Stafford","Staffordshire Moorlands","Tamworth","North Warwickshire","Nuneaton and Bedworth","Rugby","Stratford-on-Avon","Warwick","Bromsgrove","Malvern Hills","Redditch","Worcester","Wychavon","Wyre Forest","Birmingham","Coventry","Dudley","Sandwell","Solihull","Walsall","Wolverhampton","Herefordshire, County of","Telford and Wrekin","Shropshire","Stoke-on-Trent"),]
+#View(west_midlands)
+
+#East of England
+#East_of_England <- population_16[population_16$LAD16NM %in% c("Cambridge","East Cambridgeshire","Fenland","Huntingdonshire","South Cambridgeshire","Basildon","Braintree","Brentwood","Castle Point","Chelmsford","Colchester","Epping Forest","Harlow","Maldon","Rochford","Tendring","Uttlesford","Broxbourne","Dacorum","East Hertfordshire","Hertsmere","North Hertfordshire","St Albans","Stevenage","Three Rivers","Watford","Welwyn Hatfield","Breckland","Broadland","Great Yarmouth","King's Lynn and West Norfolk","North Norfolk","Norwich","South Norfolk","Babergh","Forest Heath","Ipswich","Mid Suffolk","St Edmundsbury","Suffolk Coastal","Waveney","Peterborough","Luton","Bedford","Central Bedfordshire","Southend-on-Sea","Thurrock"),]
+#View(East_of_England)
+
+#london
+#London <- population_16[population_16$LAD16NM %in% c("City of London","Barking and Dagenham","Barnet","Bexley","Brent","Bromley","Camden","Croydon","Ealing","Enfield","Greenwich","Hackney","Hammersmith and Fulham","Haringey","Harrow","Havering","Hillingdon","Hounslow","Islington","Kensington and Chelsea","Kingston upon Thames","Lambeth","Lewisham","Merton","Newham","Redbridge","Richmond upon Thames","Southwark","Sutton","Tower Hamlets","Waltham Forest","Wandsworth","Westminster"),]
+#View(London)
+
+#South East
+#south_east <- population_16[population_16$LAD16NM %in% c("Aylesbury Vale","Chiltern","South Bucks","Wycombe","Eastbourne","Hastings","Lewes","Rother","Wealden","Basingstoke and Deane","East Hampshire","Eastleigh","Fareham","Gosport","Hart","Havant","New Forest","Rushmoor","Test Valley","Winchester","Ashford","Canterbury","Dartford","Dover","Gravesham","Maidstone","Sevenoaks","Shepway","Swale","Thanet","Tonbridge and Malling","Tunbridge Wells","Cherwell","Oxford","South Oxfordshire","Vale of White Horse","West Oxfordshire","Elmbridge","Epsom and Ewell","Guildford","Mole Valley","Reigate and Banstead","Runnymede","Spelthorne","Surrey Heath","Tandridge","Waverley","Woking","Adur","Arun","Chichester","Crawley","Horsham","Mid Sussex","Worthing","Medway","Bracknell Forest","West Berkshire","Reading","Slough","Windsor and Maidenhead","Wokingham","Milton Keynes","Brighton and Hove","Portsmouth","Southampton","Isle of Wight"),]
+#View(south_east)
+
+#South West
+#south_west <- population_16[population_16$LAD16NM %in% c("East Devon","Exeter","Mid Devon","North Devon","South Hams","Teignbridge","Torridge","West Devon","Christchurch","East Dorset","North Dorset","Purbeck","West Dorset","Weymouth and Portland","Cheltenham","Cotswold","Forest of Dean","Gloucester","Stroud","Tewkesbury","Mendip","Sedgemoor","South Somerset","Taunton Deane","West Somerset","Bath and North East Somerset","Bristol, City of","North Somerset","South Gloucestershire","Cornwall","Isles of Scilly","Plymouth","Torbay","Bournemouth","Poole","Swindon","Wiltshire"),]
+#View(south_west)
+
+#Wales
+#wales <- population_16[population_16$LAD16NM %in% c("Isle of Anglesey","Gwynedd","Conwy","Denbighshire","Flintshire","Wrexham","Powys","Ceredigion","Pembrokeshire","Carmarthenshire","Swansea","Neath Port Talbot","Bridgend","Vale of Glamorgan","Rhondda Cynon Taf","Merthyr Tydfil","Caerphilly","Blaenau Gwent","Torfaen","Monmouthshire","Newport","Cardiff"),]
+#View(wales)
+
+#Scotland -- no data avaliable for scotland in population dataset
+#scotland <- population_16[population_16$LAD16NM %in% c("Aberdeen City","Aberdeenshire","Angus","Argyll and Bute","Scottish Borders","Clackmannanshire","West Dunbartonshire","Dumfries and Galloway","Dundee City","East Ayrshire","East Dunbartonshire","East Lothian","East Renfrewshire","City of Edinburgh","Falkirk","Fife","Glasgow City","Highland","Inverclyde","Midlothian","Moray","North Ayrshire","North Lanarkshire","Orkney Islands","Perth and Kinross","Renfrewshire","Shetland Islands","South Ayrshire","South Lanarkshire","Stirling","West Lothian","Eilean Siar"),]
+#View(scotland)
+
+#Northern Ireland  --- no data available for Northernireland in population dataset
+#northern_ireland <- population_16[population_16$LAD16NM %in% c("Antrim","Ards","Armagh","Ballymena","Ballymoney","Banbridge","Belfast","Carrickfergus","Castlereagh","Coleraine","Cookstown","Craigavon","Derry","Down","Dungannon","Fermanagh","Larne","Limavady","Lisburn","Magherafelt","Moyle","Newry and Mourne","Newtownabbey","North Down","Omagh","Strabane"),]
+#View(northern_ireland)
+
+
+#list with unique values to cross check the LAD names during select and check the number of LAD in the file *count verification*
+
+uniq_region <- lapply(northern_ireland,unique)
+#View(uniq_region)
+uniq_region[["LAD16NM"]]
+
+#create a new file with the filtered dataset ,DONT FORGET TO CHANGE THE NEW FILE NAME
+setwd('C:\\Users\\harsh\\Documents\\SHU\\Semester_2\\ADMP_project_work')
+getwd()
+
+
+#create region column
+View(pop_verify)
+population_regionwise_2016 <- population_16 %>% mutate(Region =
+                                         case_when(LAD16NM %in% c("Allerdale","Barrow-in-Furness","Carlisle","Copeland","Eden","South Lakeland","Burnley","Chorley","Fylde","Hyndburn","Lancaster","Pendle","Preston","Ribble Valley","Rossendale","South Ribble","West Lancashire","Wyre","Bolton","Bury","Manchester","Oldham","Rochdale","Salford","Stockport","Tameside","Trafford","Wigan","Knowsley","Liverpool","St. Helens","Sefton","Wirral","Cheshire East","Halton","Warrington","Cheshire West and Chester","Blackburn with Darwen","Blackpool") ~"northwest",
+                                                   LAD16NM %in% c("Gateshead","South Tyneside","Sunderland","Newcastle upon Tyne","North Tyneside","Hartlepool","Middlesbrough","Redcar and Cleveland","Stockton-on-Tees","Darlington","County Durham","Northumberland")~"northeast",
+                                                   LAD16NM %in% c("Craven","Hambleton","Harrogate","Richmondshire","Ryedale","Scarborough","Selby","Barnsley","Doncaster","Rotherham","Sheffield","Bradford","Calderdale","Kirklees","Leeds","Wakefield","Kingston upon Hull, City of","East Riding of Yorkshire","North East Lincolnshire","York","North Lincolnshire") ~"YorkshireandtheHumber",
+                                                   LAD16NM %in% c("Amber Valley","Bolsover","Chesterfield","Derbyshire Dales","Erewash","High Peak","North East Derbyshire","South Derbyshire","Blaby","Charnwood","Harborough","Hinckley and Bosworth","Melton","North West Leicestershire","Oadby and Wigston","Boston","East Lindsey","Lincoln","North Kesteven","South Holland","South Kesteven","West Lindsey","Corby","Daventry","East Northamptonshire","Kettering","Northampton","South Northamptonshire","Wellingborough","Ashfield","Bassetlaw","Broxtowe","Gedling","Mansfield","Newark and Sherwood","Rushcliffe","Derby","Leicester","Rutland","Nottingham") ~"EastMidlands",
+                                                   LAD16NM %in% c("Cannock Chase","East Staffordshire","Lichfield","Newcastle-under-Lyme","South Staffordshire","Stafford","Staffordshire Moorlands","Tamworth","North Warwickshire","Nuneaton and Bedworth","Rugby","Stratford-on-Avon","Warwick","Bromsgrove","Malvern Hills","Redditch","Worcester","Wychavon","Wyre Forest","Birmingham","Coventry","Dudley","Sandwell","Solihull","Walsall","Wolverhampton","Herefordshire, County of","Telford and Wrekin","Shropshire","Stoke-on-Trent") ~"Westmidlands",
+                                                   LAD16NM %in% c("Cambridge","East Cambridgeshire","Fenland","Huntingdonshire","South Cambridgeshire","Basildon","Braintree","Brentwood","Castle Point","Chelmsford","Colchester","Epping Forest","Harlow","Maldon","Rochford","Tendring","Uttlesford","Broxbourne","Dacorum","East Hertfordshire","Hertsmere","North Hertfordshire","St Albans","Stevenage","Three Rivers","Watford","Welwyn Hatfield","Breckland","Broadland","Great Yarmouth","King's Lynn and West Norfolk","North Norfolk","Norwich","South Norfolk","Babergh","Forest Heath","Ipswich","Mid Suffolk","St Edmundsbury","Suffolk Coastal","Waveney","Peterborough","Luton","Bedford","Central Bedfordshire","Southend-on-Sea","Thurrock") ~"EastofEngland",
+                                                   LAD16NM %in% c("City of London","Barking and Dagenham","Barnet","Bexley","Brent","Bromley","Camden","Croydon","Ealing","Enfield","Greenwich","Hackney","Hammersmith and Fulham","Haringey","Harrow","Havering","Hillingdon","Hounslow","Islington","Kensington and Chelsea","Kingston upon Thames","Lambeth","Lewisham","Merton","Newham","Redbridge","Richmond upon Thames","Southwark","Sutton","Tower Hamlets","Waltham Forest","Wandsworth","Westminster") ~ "London",
+                                                   LAD16NM %in% c("Aylesbury Vale","Chiltern","South Bucks","Wycombe","Eastbourne","Hastings","Lewes","Rother","Wealden","Basingstoke and Deane","East Hampshire","Eastleigh","Fareham","Gosport","Hart","Havant","New Forest","Rushmoor","Test Valley","Winchester","Ashford","Canterbury","Dartford","Dover","Gravesham","Maidstone","Sevenoaks","Shepway","Swale","Thanet","Tonbridge and Malling","Tunbridge Wells","Cherwell","Oxford","South Oxfordshire","Vale of White Horse","West Oxfordshire","Elmbridge","Epsom and Ewell","Guildford","Mole Valley","Reigate and Banstead","Runnymede","Spelthorne","Surrey Heath","Tandridge","Waverley","Woking","Adur","Arun","Chichester","Crawley","Horsham","Mid Sussex","Worthing","Medway","Bracknell Forest","West Berkshire","Reading","Slough","Windsor and Maidenhead","Wokingham","Milton Keynes","Brighton and Hove","Portsmouth","Southampton","Isle of Wight") ~ "SouthEast",
+                                                   LAD16NM %in% c("East Devon","Exeter","Mid Devon","North Devon","South Hams","Teignbridge","Torridge","West Devon","Christchurch","East Dorset","North Dorset","Purbeck","West Dorset","Weymouth and Portland","Cheltenham","Cotswold","Forest of Dean","Gloucester","Stroud","Tewkesbury","Mendip","Sedgemoor","South Somerset","Taunton Deane","West Somerset","Bath and North East Somerset","Bristol, City of","North Somerset","South Gloucestershire","Cornwall","Isles of Scilly","Plymouth","Torbay","Bournemouth","Poole","Swindon","Wiltshire") ~ "SouthWest",
+                                                   LAD16NM %in% c("Isle of Anglesey","Gwynedd","Conwy","Denbighshire","Flintshire","Wrexham","Powys","Ceredigion","Pembrokeshire","Carmarthenshire","Swansea","Neath Port Talbot","Bridgend","Vale of Glamorgan","Rhondda Cynon Taf","Merthyr Tydfil","Caerphilly","Blaenau Gwent","Torfaen","Monmouthshire","Newport","Cardiff") ~ "Wales"
+                                       
+))
+
+
+
+View(population_regionwise_2016)
+
+#view missing values after creating column region  cross verfication to check if the file has any null values.
+
+#find missing values in combined_dataset
+missing_NA <- pop_verify %>% select('Area Codes','LSOA Name','All Ages','0-15','16-29','30-44','45-64','65+','WD16CD','WD16NM','LAD16CD','LAD16NM','Region') %>% filter(!complete.cases(.))
+
+View(missing_NA)
+
+#remove extra special characters or commas in values/replace specific values in a column
+#below value replacement happens under yorkshire and the humber region 
+population_regionwise_2016$'LAD16NM'[population_regionwise_2016$'LAD16NM' == "Kingston upon Hull, City of"] <- "Kingston upon Hull City of"
+population_regionwise_2016$'Region'[population_regionwise_2016$'Region' == "Kingston upon Hull, City of"] <- "Kingston upon Hull City of"
+
+#below replacement of value happens under west midlands
+population_regionwise_2016$'LAD16NM'[population_regionwise_2016$'LAD16NM' == "Herefordshire, County of"] <- "Herefordshire County of"
+population_regionwise_2016$'Region'[population_regionwise_2016$'Region' == "Herefordshire, County of"] <- "Herefordshire County of"
+
+#below replacement of values happens under south west region
+population_regionwise_2016$'LAD16NM'[population_regionwise_2016$'LAD16NM' == "Bristol, City of"] <- "Bristol City of"
+population_regionwise_2016$'Region'[population_regionwise_2016$'Region' == "Bristol, City of"] <- "Bristol City of"
+
+#time to remove ward name and ward id column --- its of no use
+
+#below code to remove the unwanted columns
+population_regionwise_2016$'WD16CD' <- NULL   #removing wardid column
+population_regionwise_2016$'WD16NM' <- NULL  #removing wardname column
+#summary(population_regionwise_2016)
+View(population_regionwise_2016)
+
+#create new file with region column for each year
+
+write.csv(population_regionwise_2016, file ="regionwise_population_2016.csv",row.names = FALSE)
+
+
+

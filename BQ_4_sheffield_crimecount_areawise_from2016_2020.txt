@@ -1,0 +1,25 @@
+sheffield_crimecount_areawise_from2016to2020
+*****************************
+CREATE TABLE IF NOT EXISTS population_1620.sheffield_crimecount_areawise_2016_20(city_name STRING,Area_name STRING,Crime_count INT) PARTITIONED BY (year STRING); 
+
+INSERT INTO TABLE population_1620.sheffield_crimecount_areawise_2016_20 PARTITION(year="2016") SELECT lad16nm,lsoa_name,COUNT(crime_type) 
+as Crime_count from population_1620.crimeYorkshire_2016 where year = "2016" and lad16nm = "Sheffield" group by lad16nm,lsoa_name ORDER BY Crime_count DESC
+
+INSERT INTO TABLE population_1620.sheffield_crimecount_areawise_2016_20 PARTITION(year="2017") SELECT lad16nm,lsoa_name,COUNT(crime_type) 
+as Crime_count from population_1620.crimeYorkshire_2017 where year = "2017" and lad16nm = "Sheffield" group by lad16nm,lsoa_name ORDER BY Crime_count DESC
+
+INSERT INTO TABLE population_1620.sheffield_crimecount_areawise_2016_20 PARTITION(year="2018") SELECT lad16nm,lsoa_name,COUNT(crime_type) 
+as Crime_count from population_1620.crimeYorkshire_2018 where year = "2018" and lad16nm = "Sheffield" group by lad16nm,lsoa_name ORDER BY Crime_count DESC
+
+INSERT INTO TABLE population_1620.sheffield_crimecount_areawise_2016_20 PARTITION(year="2019") SELECT lad16nm,lsoa_name,COUNT(crime_type) 
+as Crime_count from population_1620.crimeYorkshire_2019 where year = "2019" and lad16nm = "Sheffield" group by lad16nm,lsoa_name ORDER BY Crime_count DESC
+
+INSERT INTO TABLE population_1620.sheffield_crimecount_areawise_2016_20 PARTITION(year="2020") SELECT lad16nm,lsoa_name,COUNT(crime_type) 
+as Crime_count from population_1620.crimeYorkshire_2020 where year = "2020" and lad16nm = "Sheffield" group by lad16nm,lsoa_name ORDER BY Crime_count DESC
+
+validations:
+
+select count(distinct Area_name) from sheffield_crimecount_areawise_2016_20; should be 345
+select count(distinct year) from sheffield_crimecount_areawise_2016_20;
+select count(*) from sheffield_crimecount_areawise_2016_20;  total should be 1725
+***************************************************************************************************
