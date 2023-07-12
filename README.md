@@ -1,2 +1,2 @@
 # Data-cleaning-using-R
-For my final project under Data Management module, I selected Crime analysis as my project topic. The current repository has the codes I worked on for data cleaning and schema building codes implemented using R and Hive 
+I did my project on the topic of Crime analysis in England and Wales. The current repository has the R coding I worked on for data cleansing and transformation activity implemented using R, Hive and Tableau for visualisation.
